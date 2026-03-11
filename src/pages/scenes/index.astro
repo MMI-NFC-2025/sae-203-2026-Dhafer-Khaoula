@@ -1,0 +1,58 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SceneCard from "../../components/SceneCard.astro";
+import { pb, getScenesByName, saveRecord } from "../../../backend/backend.mjs";
+
+let scenes = await getScenesByName();
+let message = "";
+const isAdmin = pb.authStore.isAdmin;
+
+if (Astro.request.method === "POST" && isAdmin) {
+    const formData = await Astro.request.formData();
+    await saveRecord("Scenes", formData);
+    message = "Scène ajoutée !";
+    scenes = await getScenesByName();
+}
+---
+
+<Layout title="Scènes">
+    <h1 class="text-5xl text-cyan-700 mb-6">Scènes du Festival</h1>
+
+    {
+        isAdmin && (
+            <form
+                method="POST"
+                enctype="multipart/form-data"
+                class="border p-4 rounded flex flex-col gap-4 mb-10"
+            >
+                <h2 class="text-2xl text-cyan-600">Ajouter une scène</h2>
+                <input
+                    type="text"
+                    name="nom_scene"
+                    placeholder="Nom"
+                    class="border p-2 rounded"
+                />
+                <input
+                    type="text"
+                    name="localisation"
+                    placeholder="Localisation"
+                    class="border p-2 rounded"
+                />
+                <textarea
+                    name="description_scene"
+                    placeholder="Description"
+                    class="border p-2 rounded"
+                />
+                <button class="bg-cyan-600 text-white px-4 py-2 rounded">
+                    Ajouter
+                </button>
+            </form>
+        )
+    }
+
+    {message && <p class="text-green-600">{message}</p>}
+
+    <div>
+        {scenes.map((scene) => <SceneCard scene={scene} />)}
+    </div>
+</Layout>

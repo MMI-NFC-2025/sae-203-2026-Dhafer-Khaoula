@@ -1,0 +1,114 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Pbimage from "../../components/Pbimage.astro";
+
+import {
+    pb,
+    getArtistById,
+    saveRecord,
+    deleteArtistById,
+    getScenesByName,
+} from "../../../backend/backend.mjs";
+
+const { id } = Astro.params;
+let artiste = await getArtistById(id);
+let message = "";
+
+// Suppression ou modification
+if (Astro.request.method === "POST" && pb.authStore.isAdmin) {
+    const formData = await Astro.request.formData();
+
+    if (formData.get("delete")) {
+        await deleteArtistById(id);
+        return Astro.redirect("/artistes");
+    }
+
+    await saveRecord("Artistes", formData, id);
+    message = "Modifications enregistrées !";
+    artiste = await getArtistById(id);
+}
+---
+
+<Layout title={artiste.nom_artistes}>
+    <Pbimage
+        record={artiste}
+        filename={artiste.photo__artiste}
+        alt={artiste.nom_artistes}
+        classImg="w-full max-h-96 object-cover rounded mb-6 shadow" 
+    />
+    <h2 class="text-4xl text-cyan-700 mb-4">{artiste.nom_artistes}</h2>
+
+    <p><strong>Genre :</strong> {artiste.genre}</p>
+    <p class="mt-2">{artiste.description_artiste}</p>
+    
+    <h2 class="text-4xl text-cyan-600 mt-10 mb-4">Horaires</h2>
+    <p>Jour de passage : {artiste.jour_passage}</p>
+    <p>Heure de passage : {artiste.heure_passage}</p>
+    <p>Scène: {artiste.nom_scene}</p>
+    
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {
+            (artiste.galerie ?? []).map((img : string) => (
+                <Pbimage
+                    record={artiste}
+                    filename={img}
+                    alt={artiste.nom_artistes}
+                    classImg="w-full h-48 object-cover rounded shadow"
+                />
+            ))
+        }
+    </div>
+
+    {message && <p class="text-green-600 mt-4">{message}</p>}
+
+    {
+        pb.authStore.isAdmin && (
+            <>
+                <form
+                    method="POST"
+                    enctype="multipart/form-data"
+                    class="mt-10 flex flex-col gap-4 border p-4 rounded"
+                >
+                    <h2 class="text-2xl text-cyan-600">Modifier cet artiste</h2>
+                    <input
+                        type="text"
+                        name="nom_artistes"
+                        value={artiste.nom_artistes}
+                        class="border p-2 rounded"
+                    />
+                    <input
+                        type="text"
+                        name="genre"
+                        value={artiste.genre}
+                        class="border p-2 rounded"
+                    />
+                    <textarea
+                        name="description_artiste"
+                        class="border p-2 rounded"
+                    >
+                        {artiste.description_artiste}
+                    </textarea>
+                    <label>Ajouter des images à la galerie :</label>
+                    <input
+                        type="file"
+                        name="galerie"
+                        multiple
+                        class="border p-2 rounded"
+                    />
+                    <button class="bg-cyan-600 text-white px-4 py-2 rounded">
+                        Enregistrer
+                    </button>
+                </form>
+                <form method="POST" class="mt-4">
+                    <button
+                        name="delete"
+                        value="1"
+                        class="bg-red-600 text-white px-4 py-2 rounded"
+                    >
+                        Supprimer l'artiste
+                    </button>
+                </form>
+            </>
+        )
+    }
+</Layout>

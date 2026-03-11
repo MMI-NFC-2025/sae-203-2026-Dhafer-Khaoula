@@ -1,0 +1,43 @@
+---
+const { images } = Astro.props;
+---
+
+<div class="carousel relative w-full max-w-md mx-auto overflow-hidden rounded-lg shadow" data-images={JSON.stringify(images)}>
+  <img id="carousel-img" src={images[0]} class="w-full" />
+
+  <button class="carousel-prev absolute left-2 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow">
+    ◀
+  </button>
+
+  <button class="carousel-next absolute right-2 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow">
+    ▶
+  </button>
+</div>
+
+<script>
+  document.querySelectorAll('.carousel').forEach((container) => {
+    const img = container.querySelector('#carousel-img') as HTMLImageElement;
+    const prev = container.querySelector('.carousel-prev');
+    const next = container.querySelector('.carousel-next');
+    const images = JSON.parse(container.getAttribute('data-images') || '[]');
+    let index = 0;
+
+    function update() {
+      if (img) img.src = images[index];
+    }
+
+    if (prev) {
+      prev.addEventListener('click', () => {
+        index = (index - 1 + images.length) % images.length;
+        update();
+      });
+    }
+
+    if (next) {
+      next.addEventListener('click', () => {
+        index = (index + 1) % images.length;
+        update();
+      });
+    }
+  });
+</script>

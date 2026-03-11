@@ -9,6 +9,7 @@ import {
   getSceneById,
   getArtistsBySceneId,
   getArtistsBySceneName,
+  getArtistsByGenre,
   pb,
   superUserauth,
   createUser,
@@ -129,6 +130,7 @@ try {
 }
 
 
+
 // 12. Test création d'un utilisateur
 try {
   const user = await createUser("test@example.com", "12345678");
@@ -153,4 +155,11 @@ try {
 logout();
 console.log("Déconnecté:", pb.authStore.isValid);
 
+// 15. Test getArtistsByGenre
+try {
+    const artistes = await getArtistsByGenre('Pop');
+    console.log("Artistes Pop:", artistes);
+} catch (e) {
+    console.error(e);
+}
 

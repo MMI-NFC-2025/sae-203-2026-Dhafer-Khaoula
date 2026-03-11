@@ -1,0 +1,48 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getArtistsByDate, formatDate } from "../../../backend/backend.mjs";
+
+const artistes = await getArtistsByDate();
+
+// valeurs uniques
+const genres = [...new Set(artistes.map((a) => a.genre))];
+const dates = [...new Set(artistes.map((a) => a.date_representation.slice(0, 10)))];
+const scenes = [...new Set(artistes.map((a) => a.scene))];
+---
+
+<Layout title="Programme">
+    <h1 class="text-5xl text-cyan-700 mb-6">Programme</h1>
+
+    <h2 class="text-3xl text-cyan-600 mt-8">Filtrer par genre</h2>
+    <ul class="list-disc list-inside">
+        {
+            genres.map((g) => (
+                <li>
+                    <a href={`/programme/genre/${g}`}>{g}</a>
+                </li>
+            ))
+        }
+    </ul>
+
+    <h2 class="text-3xl text-cyan-600 mt-8">Filtrer par date</h2>
+    <ul class="list-disc list-inside">
+        {
+            dates.map((d) => (
+                <li>
+                    <a href={`/programme/date/${d}`}>{d}</a>
+                </li>
+            ))
+        }
+    </ul>
+
+    <h2 class="text-3xl text-cyan-600 mt-8">Filtrer par scène</h2>
+    <ul class="list-disc list-inside">
+        {
+            scenes.map((s) => (
+                <li>
+                    <a href={`/programme/scene/${s}`}>{s}</a>
+                </li>
+            ))
+        }
+    </ul>
+</Layout>

@@ -1,0 +1,148 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ImagePB from "../../components/Pbimage.astro";
+import {
+  pb,
+  getSceneById,
+  getArtistsBySceneId,
+  saveRecord,
+  deleteSceneById,
+} from "../../../backend/backend.mjs";
+
+let pbMessage = "";
+
+const { id } = Astro.params;
+
+// GET : scène + artistes associés
+const scene = await getSceneById(id);
+let artistes = await getArtistsBySceneId(id);
+
+if (!scene) return Astro.redirect("/scenes");
+
+// POST : modification ou suppression
+if (Astro.request.method === "POST" && pb.authStore.isAdmin) {
+  const formData = await Astro.request.formData();
+
+  if (formData.get("delete")) {
+    await deleteSceneById(id);
+    return Astro.redirect("/scenes");
+  }
+
+  await saveRecord("scenes", formData, id);
+  pbMessage = "Modifications enregistrées !";
+
+  artistes = await getArtistsBySceneId(id);
+}
+---
+
+<Layout title={scene.nom}>
+  <h1 class="text-5xl text-cyan-700 mb-4">{scene.nom_scene}</h1>
+  {
+    scene.photo_scene && (
+      <ImagePB
+        record={scene}
+        filename={scene.photo_scene}
+        alt={scene.nom}
+        classImg="w-full max-h-80 object-cover rounded mb-6 shadow"
+      />
+    )
+  }
+  <p class="mt-2 mb-4">{scene.description_scene}</p>
+  <p class="mb-4"><strong>Adresse :</strong> {scene.localisation}</p>
+
+  {pbMessage && <p class="text-green-500 mt-4">{pbMessage}</p>}
+
+  <!-- ARTISTES PROGRAMMÉS -->
+  <h2 class="text-3xl text-cyan-600 mt-10 mb-4">Artistes programmés</h2>
+
+  {
+    artistes.length === 0 ? (
+      <p>Aucun artiste programmé.</p>
+    ) : (
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {artistes.map((artiste) => (
+          <div class="border p-4 rounded-md bg-white shadow">
+            <a href={`/artistes/${artiste.id}`} class="block">
+              <ImagePB
+                record={artiste}
+                filename={artiste.photo__artiste}
+                alt={artiste.nom_artistes}
+                classImg="rounded shadow mb-2 w-full h-48 object-cover"
+              />
+              <h3 class="text-xl text-cyan-700 mt-2 mb-1">
+                {artiste.nom_artistes}
+              </h3>
+            </a>
+            <div class="text-sm text-gray-600 mb-2">
+              <span class="font-semibold">Genre :</span> {artiste.genre}
+              <br />
+              <span class="font-semibold">Date :</span>{" "}
+              {artiste.date_representation?.slice(0, 10)}
+              <br />
+              <span class="font-semibold">Heure :</span>{" "}
+              {artiste.date_representation?.slice(11, 16)}
+              <br />
+              <span class="font-semibold">Scène :</span> {scene.nom_scene}
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  <!-- FORMULAIRE SUPERUSER -->
+  {
+    pb.authStore.isAdmin && (
+      <>
+        <form
+          method="POST"
+          enctype="multipart/form-data"
+          class="flex flex-col p-4 border rounded mt-10"
+        >
+          <h2 class="text-2xl text-cyan-600 mb-4">Modifier la scène</h2>
+
+          <input
+            type="text"
+            name="nom"
+            value={scene.nom_scene}
+            class="border my-4 p-2 rounded-md"
+          />
+
+          <input
+            type="text"
+            name="localisation"
+            value={scene.localisation}
+            class="border my-4 p-2 rounded-md"
+          />
+
+          <textarea name="description" class="border my-4 p-2 rounded-md">
+            {scene.description_scene}
+          </textarea>
+
+          <label>Changer la photo :</label>
+          <input
+            type="file"
+            name="photo_scene"
+            class="border my-4 p-2 rounded-md"
+          />
+
+          <input
+            type="submit"
+            value="Modifier"
+            class="bg-slate-500 rounded-lg p-5"
+          />
+        </form>
+
+        <form method="POST" class="mt-4">
+          <button
+            name="delete"
+            value="1"
+            class="bg-red-600 text-white p-3 rounded"
+          >
+            Supprimer la scène
+          </button>
+        </form>
+      </>
+    )
+  }
+</Layout>

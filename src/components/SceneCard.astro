@@ -1,0 +1,25 @@
+---
+import Pbimage from "./Pbimage.astro";
+const { scene } = Astro.props;
+---
+
+<div class="border p-4 my-4 rounded-md">
+    <Pbimage
+        record={scene}
+        filename={scene.photo_scene}
+        alt={scene.nom_scene}
+    />
+
+    <h2 class="text-3xl text-cyan-500 mt-3">{scene.nom_scene}</h2>
+
+    <p class="text-sm text-gray-500 mb-2">{scene.localisation}</p>
+    <p class="mb-2">{scene.description_scene}</p>
+    <p class="text-xs text-gray-500">Capacité : {scene.capacite}</p>
+
+    <a
+        href={`/scenes/${scene.id}`}
+        class="inline-block mt-2 text-cyan-600 underline"
+    >
+        Voir la scène
+    </a>
+</div>

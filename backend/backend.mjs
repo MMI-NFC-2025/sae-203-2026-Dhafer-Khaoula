@@ -58,7 +58,7 @@ export async function getArtistsBySceneName(sceneName) {
 }
 
 // 8. Ajouter ou modifier un artiste ou une scène
-export async function saveRecord(collection, data, id = null) {
+export async function saveRecord(collection, data, id) {
     if (id) {
         return await pb.collection(collection).update(id, data);
     } else {
@@ -104,5 +104,31 @@ export async function Userauth(login, mdp) {
 // 14. Déconnexion
 export function logout() {
     pb.authStore.clear();
+}
+
+// Ajout hors consignes SI
+// 15. Tous les artistes d'un genre donné, triés par date
+export async function getArtistsByGenre(genre) {
+    const records = await pb.collection('Artistes').getFullList({
+        filter: `genre = "${genre}"`,
+        sort: 'date_representation',
+    });
+    return records;
+}
+
+// 16. Tous les artistes d'une date donnée (jour uniquement)
+export async function getArtistsByDateFilter(date) {
+    const records = await pb.collection('Artistes').getFullList({
+        filter: `date_representation >= "${date} 00:00:00" && date_representation <= "${date} 23:59:59"`,
+        sort: 'nom_artistes',
+    });
+    return records;
+}
+
+// 17. Formater une date en français
+export function formatDate(date) {
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const DateString = new Date(date).toLocaleDateString('fr-FR', options);
+    return DateString;
 }
 

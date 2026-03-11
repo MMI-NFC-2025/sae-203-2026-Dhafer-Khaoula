@@ -1,0 +1,28 @@
+---
+import Pbimage from "./Pbimage.astro";
+const { artiste } = Astro.props;
+---
+
+<div class="border p-4 my-4 rounded-md">
+
+  <Pbimage 
+    record={artiste} 
+    filename={artiste.photo__artiste} 
+    alt={artiste.nom_artistes}
+  />
+
+  <h2 class="text-3xl text-cyan-500 mt-3">
+    {artiste.nom_artistes}
+  </h2>
+
+  <p class="text-sm text-gray-500">
+    {artiste.genre} — {artiste.date_representation?.slice(0, 16)}
+  </p>
+
+  <a
+    href={`/artistes/${artiste.id}`}
+    class="inline-block mt-2 text-cyan-600 underline"
+  >
+    Voir la fiche
+  </a>
+</div>

@@ -1,0 +1,25 @@
+---
+const { title, content } = Astro.props;
+---
+
+<div class="accordion border rounded-md p-4 my-4">
+    <button class="toggle font-bold text-cyan-700">
+        {title}
+    </button>
+
+    <p class="content hidden mt-2">
+        {content}
+    </p>
+</div>
+
+<script>
+    document.querySelectorAll(".accordion").forEach((container) => {
+        const btn = container.querySelector(".toggle");
+        const content = container.querySelector(".content");
+        if (btn && content) {
+            btn.addEventListener("click", () => {
+                content.classList.toggle("hidden");
+            });
+        }
+    });
+</script>

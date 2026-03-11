@@ -1,0 +1,47 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { pb } from "../../backend/backend.mjs";
+
+let message = "";
+
+if (Astro.request.method === "POST") {
+    const formData = await Astro.request.formData();
+    const email = formData.get("email")?.toString() || "";
+    const password = formData.get("password")?.toString() || "";
+
+    try {
+        await pb.collection("_superusers").authWithPassword(email, password);
+        return Astro.redirect("/");
+    } catch (e) {
+        message = "Identifiants incorrects.";
+    }
+}
+---
+
+<Layout title="Connexion">
+    <h1 class="text-4xl text-cyan-700 mb-6">Connexion</h1>
+
+    {message && <p class="text-red-500">{message}</p>}
+
+    <form method="POST" class="flex flex-col gap-4 max-w-md">
+        <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            required
+            class="border p-2 rounded"
+        />
+
+        <input
+            type="password"
+            name="password"
+            placeholder="Mot de passe"
+            required
+            class="border p-2 rounded"
+        />
+
+        <button class="bg-cyan-600 text-white px-4 py-2 rounded">
+            Se connecter
+        </button>
+    </form>
+</Layout>
