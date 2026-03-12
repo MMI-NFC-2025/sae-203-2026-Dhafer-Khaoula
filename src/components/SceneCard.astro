@@ -3,13 +3,15 @@ import Pbimage from "./Pbimage.astro";
 const { scene } = Astro.props;
 ---
 
-<div class="scene__card rounded-lg shadow-lg bg-white p-6 flex flex-col gap-4">
-    <Pbimage 
-        record={scene} 
-        filename={scene.photo_scene}
-        alt={scene.nom_scene}
-        class="scene__card-img rounded-4xl w-full h-60 object-cover border-2 border-[var(--color-blue-4)]"
-    />
-    <h3 class="scene__card-title text-2xl font-bold">{scene.nom_scene}</h3>
-    <p class="scene__card-text text-base text-gray-700">{scene.description_scene}</p>
-</div>
+<a href={`/scenes/${scene.id}`} class="block group">
+    <div class="scene__card rounded-lg shadow-lg bg-white p-6 flex flex-col gap-4 group-hover:shadow-xl transition-shadow">
+        <Pbimage 
+            record={scene} 
+            filename={scene.photo_scene}
+            alt={scene.nom_scene}
+            class="scene__card-img rounded-4xl w-full h-60 object-cover border-2 border-[var(--color-blue-4)]"
+        />
+        <h3 class="scene__card-title text-2xl font-bold">{scene.nom_scene}</h3>
+        <p class="scene__card-text text-base text-gray-700">{scene.description_scene}</p>
+    </div>
+</a>
