@@ -1,0 +1,41 @@
+---
+import { Image } from "astro:assets";
+import heroImg from "../assets/img/hero_img.avif";
+
+const { brand, title } = Astro.props;
+---
+
+<div
+  class="relative grid h-[17.625rem] items-center justify-center text-white 
+         before:absolute before:inset-0 before:-z-10 
+         before:bg-gradient-to-t before:from-black/40 before:to-black/20"
+>
+
+  <Image
+    src={heroImg}
+    alt={brand}
+    class="absolute inset-0 -z-20 size-full object-cover"
+    width={1200}
+    height={600}
+    format="avif"
+  />
+
+  <div class="relative z-10 flex flex-col items-center justify-center">
+
+    <h1
+      class="text-[48px] font-Inter text-[rgb(249,249,249)] text-center mb-[25%]"
+      style="webkit-text-stroke-width:1px; text-stroke-color:rgb(6,6,6);"
+    >
+      {brand}
+    </h1>
+
+    <h2
+      class="text-[24px] font-Inter text-[rgb(249,249,249)] text-center"
+      style="text-stroke-width:0.5px; text-stroke-color:rgb(6,6,6);"
+    >
+      {title}
+    </h2>
+
+  </div>
+
+</div>

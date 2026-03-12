@@ -3,26 +3,23 @@ import Pbimage from "./Pbimage.astro";
 const { artiste } = Astro.props;
 ---
 
-<div class="border p-4 my-4 rounded-md">
+<a href={`/artistes/${artiste.id}`} class="block group">
+  <div class="artist__card rounded-lg shadow-lg bg-white p-6 flex flex-col gap-4 group-hover:shadow-xl transition-shadow">
+    <Pbimage 
+      record={artiste} 
+      filename={artiste.photo__artiste}
+      alt={artiste.nom_artistes}
+      class="artist__card-img rounded-4xl w-full h-60 object-cover border-2 border-[var(--color-blue-4)]"
+    />
+    <h3 class="artist__card-title text-2xl font-bold ">{artiste.nom_artistes}</h3>
+    <p class="artist__card-text text-base text-gray-700">{artiste.description_artiste}</p>
+    <div class="artist__card--tag-container flex flex-wrap gap-2 mt-2">
+      <p class="artist__card--tag-date bg-[var(--color-light-gray-2)] px-2 py-1 rounded-4xl">{artiste.date_representation?.slice(0, 10) || 'Date inconnue'}</p>
+      <p class="artist__card--tag-hour bg-[var(--color-light-gray-2)] px-2 py-1 rounded-4xl">{artiste.date_representation?.slice(11, 16) || 'Heure inconnue'}</p>
+      <p class="artist__card--tag-style bg-[var(--color-violet)] text-white px-2 py-1 rounded-4xl">{artiste.genre || 'Genre'}</p>
+      {artiste.genre2 && <p class="artist__card--tag-style bg-[var(--color-violet)] text-white px-2 py-1 rounded-4xl">{artiste.genre2}</p>}
+      <p class="artist__card--tag-scene bg-[var(--color-blue-1)] text-white px-2 py-1 rounded-4xl">{artiste.expand?.scene?.nom_scene || 'Scène inconnue'}</p>
+    </div>
+  </div>
+</a>
 
-  <Pbimage 
-    record={artiste} 
-    filename={artiste.photo__artiste} 
-    alt={artiste.nom_artistes}
-  />
-
-  <h2 class="text-3xl text-cyan-500 mt-3">
-    {artiste.nom_artistes}
-  </h2>
-
-  <p class="text-sm text-gray-500">
-    {artiste.genre} — {artiste.date_representation?.slice(0, 16)}
-  </p>
-
-  <a
-    href={`/artistes/${artiste.id}`}
-    class="inline-block mt-2 text-cyan-600 underline"
-  >
-    Voir la fiche
-  </a>
-</div>

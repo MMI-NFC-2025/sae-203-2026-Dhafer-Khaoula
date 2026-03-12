@@ -1,1 +1,52 @@
 @import "tailwindcss";
+
+@theme {
+  --color-black: oklch(0.07 0.01 260);
+  --color-blue-1: oklch(0.38 0.25 264);
+  --color-blue-2: oklch(0.38 0.25 264);
+  --color-blue-3: oklch(0.72 0.17 241);
+  --color-blue-4: oklch(0.87 0.12 196);
+  --color-light-gray-1: oklch(0.98 0.01 95);
+  --color-light-gray-2: oklch(0.86 0.01 95);
+  --color-light-gray-3: oklch(0.69 0.01 95);
+  --color-violet: oklch(0.63 0.24 296);
+
+  --font-inter: "Inter", sans-serif;
+  --font-poppins: "Poppins", sans-serif;
+
+  --text-h1: 3rem;
+  --text-h2: 1.5rem;
+  --text-h3: 1.25rem;
+  --text-body: 1rem;
+  --text-small: 0.75rem;
+
+  --my-grid: repeat(12, minmax(0, 88px));
+}
+
+@layer base {
+  body {
+    @apply font-poppins bg-[var(--color-light-gray-1)];
+  }
+
+  h1 { @apply font-inter text-[var(--text-h1)]; }
+  h2 { @apply font-inter text-[var(--text-h2)]; }
+  h3 { @apply font-inter text-[var(--text-h3)]; }
+}
+
+@layer components {
+  .grille {
+    @apply px-6 lg:grid lg:grid-cols-(--my-grid) lg:gap-8 lg:justify-center;
+  }
+}
+
+
+@layer utilities {
+  .stroke-2 { -webkit-text-stroke-width: 1px; }
+  .stroke-1 { -webkit-text-stroke-width: 0.5px; }
+  .stroke-black { -webkit-text-stroke-color: var(--color-black); }
+
+  .snap-x { scroll-snap-type: x mandatory; }
+  .snap-start { scroll-snap-align: start; }
+
+  summary::-webkit-details-marker { display: none; }
+}

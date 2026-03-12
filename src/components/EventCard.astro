@@ -1,0 +1,42 @@
+---
+import Pbimage from "./Pbimage.astro";
+const { event } = Astro.props;
+const tags = [event.genre, event.genre2].filter(Boolean);
+---
+
+<div class="flex items-center p-4 rounded shadow bg-white">
+  <!-- PHOTO RONDE -->
+  {event.photo__artiste ? (
+    <Pbimage
+      record={event}
+      filename={event.photo__artiste}
+      alt={event.nom_artistes}
+      class="w-20 h-20 rounded-full object-cover mr-6 border-2 border-cyan-400"
+    />
+  ) : (
+    <div class="w-20 h-20 rounded-full bg-gray-200 mr-6 flex items-center justify-center text-gray-400 text-xl">?</div>
+  )}
+  <!-- INFOS -->
+  <div class="flex-1">
+    <!-- NOM -->
+    <h3 class="text-2xl font-semibold mb-1">{event.nom_artistes}</h3>
+    <!-- HEURE DE REPRESENTATION -->
+    {event.date_representation && (
+      <p class="text-gray-400 text-base mb-1">
+        {(() => {
+          const heure = event.date_representation.slice(11, 16);
+          // Si tu as une heure de fin, adapte ici
+          return heure ? `${heure} – ${heure}` : 'Heure inconnue';
+        })()}
+      </p>
+    )}
+    <!-- SCÈNE -->
+    <p class="text-gray-400 text-base mb-1">
+      {event.expand && event.expand.scene && event.expand.scene.nom_scene ? event.expand.scene.nom_scene : 'Scène inconnue'}
+    </p>
+    <!-- GENRES -->
+    {tags.length > 0 && (
+      <p class="text-base mt-1">{tags.join(', ')}</p>
+    )}
+  </div>
+</div>

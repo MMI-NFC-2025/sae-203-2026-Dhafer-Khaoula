@@ -1,47 +1,110 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { pb } from "../../backend/backend.mjs";
+import Hero from "../components/Hero.astro";
+import { pb, logout, createUser } from "../../backend/backend.mjs";
 
 let message = "";
+let showCreate = false;
 
 if (Astro.request.method === "POST") {
-    const formData = await Astro.request.formData();
+  const formData = await Astro.request.formData();
+  if (formData.get("logout")) {
+    logout();
+    return Astro.redirect("/login");
+  }
+  if (formData.get("create")) {
     const email = formData.get("email")?.toString() || "";
     const password = formData.get("password")?.toString() || "";
-
     try {
-        await pb.collection("_superusers").authWithPassword(email, password);
-        return Astro.redirect("/");
+      await createUser(email, password);
+      message = "Compte créé avec succès !";
     } catch (e) {
-        message = "Identifiants incorrects.";
+      message = "Erreur lors de la création du compte.";
     }
+    showCreate = true;
+  } else {
+    const email = formData.get("email")?.toString() || "";
+    const password = formData.get("password")?.toString() || "";
+    try {
+      await pb.collection("_superusers").authWithPassword(email, password);
+      return Astro.redirect("/");
+    } catch (e) {
+      message = "Identifiants incorrects.";
+    }
+  }
 }
 ---
 
 <Layout title="Connexion">
-    <h1 class="text-4xl text-cyan-700 mb-6">Connexion</h1>
-
-    {message && <p class="text-red-500">{message}</p>}
-
-    <form method="POST" class="flex flex-col gap-4 max-w-md">
-        <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            required
-            class="border p-2 rounded"
-        />
-
-        <input
-            type="password"
-            name="password"
-            placeholder="Mot de passe"
-            required
-            class="border p-2 rounded"
-        />
-
-        <button class="bg-cyan-600 text-white px-4 py-2 rounded">
-            Se connecter
-        </button>
-    </form>
+  <Hero brand="Les rives du territoire" title="Connexion" />
+  <div class="my-8"></div>
+  <section class="max-w-md mx-auto px-4 py-8 bg-white rounded shadow">
+    {message && <p class="text-red-500 mb-4">{message}</p>}
+    {
+      pb.authStore.isValid ? (
+        <form method="POST" class="flex flex-col items-center gap-4">
+          <button
+            name="logout"
+            value="true"
+            class="rounded bg-red-600 px-6 py-2 text-white hover:bg-red-700 transition"
+          >
+            Se déconnecter
+          </button>
+        </form>
+      ) : (
+        <>
+          <form method="POST" class="flex flex-col gap-4 mb-8">
+            <label class="font-semibold text-cyan-700" htmlFor="email">Email</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              placeholder="Email"
+              required
+              class="rounded border px-3 py-2"
+            />
+            <label class="font-semibold text-cyan-700" htmlFor="password">Mot de passe</label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="Mot de passe"
+              required
+              class="rounded border px-3 py-2"
+            />
+            <button class="rounded bg-cyan-600 px-6 py-2 text-white hover:bg-cyan-700 transition">
+              Se connecter
+            </button>
+          </form>
+          <form method="POST" class="flex flex-col gap-4">
+            <label class="font-semibold text-cyan-700" htmlFor="email-create">Email (nouveau compte)</label>
+            <input
+              type="email"
+              name="email"
+              id="email-create"
+              placeholder="Email (nouveau compte)"
+              required
+              class="rounded border px-3 py-2"
+            />
+            <label class="font-semibold text-cyan-700" htmlFor="password-create">Mot de passe (nouveau compte)</label>
+            <input
+              type="password"
+              name="password"
+              id="password-create"
+              placeholder="Mot de passe (nouveau compte)"
+              required
+              class="rounded border px-3 py-2"
+            />
+            <button
+              name="create"
+              value="true"
+              class="rounded bg-green-600 px-6 py-2 text-white hover:bg-green-700 transition"
+            >
+              Créer un compte
+            </button>
+          </form>
+        </>
+      )
+    }
+  </section>
 </Layout>

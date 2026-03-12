@@ -1,13 +1,16 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import ArtisteCard from "../../components/ArtisteCard.astro";
+import Hero from "../../components/Hero.astro";
 import {
     pb,
     getArtistsAlphabetical,
     saveRecord,
 } from "../../../backend/backend.mjs";
-
-let artistes = await getArtistsAlphabetical();
+let artistes = await pb.collection('Artistes').getFullList({
+    sort: 'nom_artistes',
+    expand: 'scene'
+});
 let message = "";
 const isAdmin = pb.authStore.isAdmin;
 
@@ -19,11 +22,17 @@ if (Astro.request.method === "POST" && isAdmin) {
 }
 ---
 
-<Layout title="Artistes">
-    <h1 class="text-5xl text-cyan-700 mb-6">Nos artistes</h1>
 
-    {
-        isAdmin && (
+<Layout title="Artistes">
+   <Hero brand="Les Rives du Territoire" title="Découvrez nos artistes" />
+     <section class="main mx-auto max-w-5xl px-4 py-8">
+        
+        <p class="main__text text-lg mb-8">
+            Découvrez les talents émergents qui feront vibrer Les Rives du Territoire : une sélection explosive de hip-hop, électro et pop indépendante, ancrée dans les racines locales de Bourgogne-Franche-Comté. Ces artistes locaux, comme Pierre Hugues José, Las Fritas ou le Collectif D21, fusionnent beats urbains et engagements citoyens pour une programmation audacieuse et authentique. Rejoignez-nous du 20 au 23 décembre 2026 aux Berges de la Savoureuse pour vibrer au rythme du territoire.
+        </p>
+        <h2 class="main__title text-3xl font-inter mb-6">Artistes présents</h2>
+
+        {isAdmin && (
             <form
                 method="POST"
                 enctype="multipart/form-data"
@@ -58,10 +67,12 @@ if (Astro.request.method === "POST" && isAdmin) {
                     Ajouter
                 </button>
             </form>
-        )
-    }
+        )}
 
-    {message && <p class="text-green-600">{message}</p>}
+        {message && <p class="text-green-600 mb-6">{message}</p>}
 
-    {artistes.map((art) => <ArtisteCard artiste={art} />)}
+        <div class="artist__card-list grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {artistes.map((art) => <ArtisteCard artiste={art} />)}
+        </div>
+    </section>
 </Layout>

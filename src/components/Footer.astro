@@ -1,0 +1,55 @@
+---
+import { Image } from "astro:assets";
+
+import LogoFooter from "../assets/icons/logo_small_img.svg";
+import IconTiktok from "../assets/icons/icon_tiktok.svg";
+import IconInstagram from "../assets/icons/icon_insta.svg";
+import IconX from "../assets/icons/icon_x.svg";
+import IconLinkedin from "../assets/icons/icon_link.svg";
+
+const socialLinks = [
+  { url: "https://tiktok.com", label: "tiktok", Icon: IconTiktok },
+  { url: "https://instagram.com", label: "instagram", Icon: IconInstagram },
+  { url: "https://x.com", label: "x", Icon: IconX },
+  { url: "https://linkedin.com", label: "linkedin", Icon: IconLinkedin },
+];
+---
+
+<footer class="flex flex-col items-center bg-[rgb(5,140,216)] px-6 py-10 text-[rgb(249,249,249)]">
+
+  <!-- Logo -->
+  <div class="flex flex-col items-center">
+    <Image
+      src={LogoFooter}
+      alt="Les rives du territoire"
+      class="w-20 pt-2 pb-3"
+    />
+    <span class="block w-[20.1875rem] h-[2px] bg-[rgb(1,11,191)] opacity-80 rounded"></span>
+  </div>
+
+  <!-- Réseaux sociaux -->
+  <div class="flex flex-col items-center mt-6">
+    <div class="flex items-center gap-10 my-5">
+      {
+        socialLinks.map(({ url, label, Icon }) => (
+          <a href={url} aria-label={label}>
+            <Image src={Icon} alt={label} class="w-9" />
+          </a>
+        ))
+      }
+    </div>
+    <span class="block w-[20.1875rem] h-[2px] bg-[rgb(1,11,191)] opacity-80 rounded"></span>
+  </div>
+
+  <!-- Contact -->
+  <div class="text-center mt-6">
+    <h3 class="font-[Inter] text-[1rem] uppercase">Contact</h3>
+    <ul class="list-none p-0 m-0 space-y-1 mt-2">
+      <li class="font-[Poppins] text-[0.75rem]">+33 X XX XX XX XX</li>
+      <li class="font-[Poppins] text-[0.75rem]">
+        rivesterritoire@gmail.com
+      </li>
+    </ul>
+  </div>
+
+</footer>

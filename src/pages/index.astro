@@ -1,10 +1,67 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Hero from '../components/Hero.astro';
+import Carousel from '../components/Carrousel.astro';
 ---
 
-<Layout>
-	<h1>Welcome to Astro!</h1>
+<Layout title="Accueil">
+
+  <!-- HERO -->
+  <Hero
+    brand="Les rives du territoire"
+    title="Festival de musique"
+  />
+
+  <!-- INTRO -->
+  <section class="max-w-3xl mx-auto px-4 mt-10">
+
+    <h2 class="text-2xl font-bold-700 mb-4">
+      Du 20 au 23 Décembre 2026
+    </h2>
+
+    <p class="text-gray-700 leading-relaxed mb-6">
+      Les Rives du Territoire est un festival de musiques actuelles et de culture urbaine qui met à l’honneur
+      le hip‑hop, l’électro et la pop indépendante...
+    </p>
+
+    <div class="flex justify-center mb-10">
+      <button class="bg-cyan-600 text-white px-6 py-2 rounded shadow hover:bg-cyan-700 transition">
+        Accéder à la billetterie
+      </button>
+    </div>
+
+    <h2 class="text-2xl font-bold-700 mb-6">
+      Artistes présents au festival
+    </h2>
+  </section>
+
+  <!-- CAROUSEL -->
+  <section class="px-4 mb-10">
+    <Carousel
+      images={[
+        "/src/assets/img/artist_img_05_pier.avif",
+        "/src/assets/img/artist_img_06_pomm.avif",
+        "/src/assets/img/artist_img_04_luid.avif"
+      ]}
+    />
+  </section>
+
+  <!-- EXPÉRIENCE -->
+  <section class="max-w-3xl mx-auto px-4">
+
+    <div class="flex justify-center mb-10">
+      <a href="/artistes" class="bg-cyan-600 text-white px-6 py-2 rounded shadow hover:bg-cyan-700 transition text-center">
+        Voir tous les artistes
+      </a>
+    </div>
+
+    <h2 class="text-2xl font-bold-700 mb-4">Expérience proposée</h2>
+
+    <p class="text-gray-700 leading-relaxed mb-10">
+      Les Rives du Territoire offrent une expérience où musique, culture urbaine et créativité locale se rencontrent
+      en plein air, en plein hiver...
+    </p>
+
+  </section>
+
 </Layout>

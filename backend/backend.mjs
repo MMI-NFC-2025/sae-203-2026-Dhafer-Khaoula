@@ -29,7 +29,9 @@ export async function getArtistsAlphabetical() {
 
 // 4. Infos d'un artiste par son id
 export async function getArtistById(id) {
-    const record = await pb.collection('Artistes').getOne(id);
+    const record = await pb.collection('Artistes').getOne(id, {
+        expand: 'scene'
+    });
     return record;
 }
 

@@ -1,0 +1,66 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import AccordionItem from "../components/Accordion.astro";
+
+const faq = [
+  {
+    question: "Est-ce que le festival est accessible aux personnes à mobilité réduite (PMR) ?",
+    answer:
+      "Oui, le site des Berges de la Savoureuse est aménagé avec des cheminements accessibles, des zones réservées près des scènes et des sanitaires adaptés pour les personnes à mobilité réduite. Un accueil spécifique sera indiqué à l’entrée pour accompagner si besoin."
+  },
+  {
+    question: "Est-ce qu’il y aura de la restauration sur place ?",
+    answer:
+      "Oui, plusieurs stands de restauration et foodtrucks seront présents sur le site, avec des options végétariennes, véganes et locales. Des points de bar proposeront également boissons chaudes, softs et boissons sans alcool."
+  },
+  {
+    question: "Puis-je entrer avec mon propre sac et une bouteille d’eau ?",
+    answer:
+      "Les sacs sont autorisés mais feront l’objet d’un contrôle à l’entrée pour des raisons de sécurité. Les bouteilles d’eau en plastique souple et sans bouchon sont acceptées, et des points d’eau seront disponibles pour les remplir sur le site."
+  }
+];
+---
+
+<Layout title="Informations pratiques">
+
+  <!-- HERO -->
+  <Hero brand="Les rives du territoire" title="Informations" />
+
+  <!-- CONTENT -->
+  <section class="max-w-3xl mx-auto px-4 my-8">
+
+    <!-- TARIFS -->
+    <h2 class="text-2xl font-bold-700">Tarifs</h2>
+    <p class="mb-6 text-gray-700">
+      Les Rives du Territoire propose plusieurs formules de billets pour s’adapter à tous les publics. Vous pourrez choisir entre un billet jour (accès à une journée de concerts) et un pass 4 jours pour profiter de l’ensemble du festival. Des tarifs réduits seront disponibles pour les étudiants, les moins de 18 ans et les demandeurs d’emploi, sur présentation d’un justificatif au moment du contrôle des billets.
+    </p>
+
+    <div class="flex justify-center mb-8">
+      <button class="bg-blue-300 text-white px-6 py-2 rounded shadow hover:bg-cyan-700 transition">
+        Accéder à la billetterie
+      </button>
+    </div>
+
+    <!-- HÉBERGEMENTS -->
+    <h2 class="text-2xl font-bold-700 mb-4">Hébergements</h2>
+    <p class="mb-6 text-gray-700">
+      Pour prolonger l’expérience du festival, de nombreux hébergements sont accessibles autour de Belfort : hôtels en centre-ville, chambres d’hôtes, campings et locations de vacances. Il est conseillé de réserver en avance, les disponibilités pouvant être limitées pendant la période du festival.
+    </p>
+
+    <!-- TRANSPORT -->
+    <h2 class="text-2xl font-bold-700 mb-4">Transport</h2>
+    <p class="mb-6 text-gray-700">
+      Le festival est facilement accessible en train, en bus, en voiture ou en covoiturage. Depuis la gare de Belfort, des lignes de bus permettent de rejoindre rapidement le centre-ville et les Berges de la Savoureuse.
+    </p>
+
+    <!-- FAQ -->
+    <h2 class="text-2xl font-bold mb-4">FAQ</h2>
+
+    {faq.map(item => (
+      <AccordionItem title={item.question} content={item.answer} />
+    ))}
+
+  </section>
+
+</Layout>
